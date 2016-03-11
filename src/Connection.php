@@ -51,18 +51,26 @@ class Connection
         return $this;
     }
 	
+	/*
+	* create wrapper
+	*/
 	protected function setWrapper(FtpWrapper $wrapper)
     {
         $this->ftp = $wrapper;
         return $this;
     }
     
+    /*
+    * add login
+    */
     public function login($username = 'anonymous', $password = '')
     {
         $result = $this->ftp->login($username, $password);
         if ($result === false) {
             throw new Exception('Login incorrect');
         }
+        $this->ftp->pasv(true);
+        
         return $this;
     }
     
@@ -87,9 +95,6 @@ class Connection
         if (!$this->isDir($directory)) {
             throw new Exception('"'.$directory.'" is not a directory');
         }
-        //return false;
-        //return false;
-        $this->ftp->pasv(true);
         $files = $this->ftp->nlist($directory);
         if ($files === false) {
             throw new Exception('Unable to list directory');

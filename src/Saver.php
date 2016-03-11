@@ -5,6 +5,9 @@ class Saver
 {
     protected $conn;
     
+    /*
+    * connect to host $host, using credentials $user and $pass
+    */
     public function __construct($host,$user = "", $pass = "")
     {
         $this->conn = new Connection($host);
@@ -16,6 +19,9 @@ class Saver
         }
     }
     
+    /*
+    * search for pictures in directory $directory
+    */
     public function searchPictures($directory)
     {
         $regex = array();
@@ -24,9 +30,9 @@ class Saver
         $regex[] = '/(.*)\.jpg$/i';
         $regex[] = '/(.*)\.gif$/i';
         
+        //non-recursive search
         $files = $this->conn->nlist($directory,/*true*/false);
         $pictures = array();
-        //var_dump($files);
         foreach($files as $file){
             $prepared_file = strtolower($file);
             foreach ($regex as $pattern){
@@ -39,6 +45,9 @@ class Saver
         return $pictures;
     }
     
+    /*
+    * save pictures from $sourceDir on remote server to $destinationDir
+    */
     public function savePictures($sourceDir, $destinationDir)
     {
         if (!is_dir($destinationDir)){
@@ -62,6 +71,8 @@ class Saver
             fclose($fp);
             
         }
+        
         return true;
     }
 }
+
